@@ -4,9 +4,9 @@ export default function ServerDown() {
   useEffect(() => {
     const checkServer = async () => {
       try {
-        const res = await fetch("http://localhost:8080", {
-          method: "GET",
-        });
+       const res = await fetch(import.meta.env.VITE_API_BASE_URL, {
+  method: "GET",
+});
 
         if (res) {
           window.location.href = "/";
