@@ -17,8 +17,9 @@ export const patientApi = {
 export const doctorApi = {
   getProfileByUserId: (userId) => api.get(`/doctor/profile/user/${userId}`),
   getAppointments: (doctorId) => api.get(`/doctor/appointments/${doctorId}`),
+
   updateAppointmentStatus: (appointmentId, data) =>
-    api.put(`/appointments/${appointmentId}/status`, data),
+    api.put(`/doctor/appointments/${appointmentId}/status`, data),
 
   createPrescription: (data) => api.post("/doctor/prescriptions", data),
   getPrescriptions: (doctorId) => api.get(`/doctor/prescriptions/${doctorId}`),

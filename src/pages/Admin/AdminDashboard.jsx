@@ -26,13 +26,33 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
 
-      const [doctorsRes, patientsRes, appointmentsRes, usersRes] =
-        await Promise.all([
-          api.get("/admin/doctors"),
-          api.get("/admin/patients"),
-          api.get("/admin/appointments"),
-          api.get("/admin/users"),
-        ]);
+      const doctorsRes = await api
+        .get("/admin/doctors")
+        .catch((err) => {
+          console.error("Doctors API error:", err);
+          return { data: [] };
+        });
+
+      const patientsRes = await api
+        .get("/admin/patients")
+        .catch((err) => {
+          console.error("Patients API error:", err);
+          return { data: [] };
+        });
+
+      const appointmentsRes = await api
+        .get("/admin/appointments")
+        .catch((err) => {
+          console.error("Appointments API error:", err);
+          return { data: [] };
+        });
+
+      const usersRes = await api
+        .get("/admin/users")
+        .catch((err) => {
+          console.error("Users API error:", err);
+          return { data: [] };
+        });
 
       setStats({
         doctors: Array.isArray(doctorsRes.data) ? doctorsRes.data.length : 0,
@@ -148,7 +168,6 @@ export default function AdminDashboard() {
   return (
     <Layout>
       <div className="w-full space-y-5 sm:space-y-6 lg:space-y-8">
-        {/* Hero */}
         <div className="relative w-full overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-r from-violet-700 via-purple-700 to-indigo-800 p-4 text-white shadow-2xl sm:rounded-[26px] sm:p-5 md:p-6 lg:rounded-[30px] lg:p-8">
           <div className="absolute -top-10 right-0 h-28 w-28 rounded-full bg-cyan-400/15 blur-3xl sm:h-36 sm:w-36 lg:h-40 lg:w-40" />
           <div className="absolute -bottom-12 left-4 h-28 w-28 rounded-full bg-violet-500/15 blur-3xl sm:left-8 sm:h-36 sm:w-36 lg:h-40 lg:w-40" />
@@ -205,7 +224,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
           {statCards.map((card) => (
             <div
@@ -233,7 +251,6 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* Actions */}
         <div className="space-y-4 sm:space-y-5">
           <div>
             <h2 className="text-xl font-bold text-white sm:text-2xl">
