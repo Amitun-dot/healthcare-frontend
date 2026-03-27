@@ -126,7 +126,9 @@ export default function PrescriptionPage() {
       const createdPrescription = response.data;
 
       setLastPrescriptionId(createdPrescription.id);
-      setMessage("Prescription created and email sent successfully");
+      setMessage(
+        "Prescription created successfully. Email is being sent in background."
+      );
 
       setSelectedAppointmentId("");
       setForm({ diagnosis: "", medicines: "", notes: "" });
