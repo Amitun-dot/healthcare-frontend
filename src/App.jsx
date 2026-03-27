@@ -56,7 +56,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/server-down" element={<ServerDown />} />
+        {/* <Route path="/server-down" element={<ServerDown />} /> */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
         {/* Common Protected Routes */}
