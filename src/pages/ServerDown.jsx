@@ -1,21 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ServerDown() {
-  useEffect(() => {
-    const checkServer = async () => {
-      try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL, {
-          method: "GET",
-        });
+  const [checking, setChecking] = useState(false);
 
-        if (res.ok || res.status) {
-          window.location.href = "/";
-        }
-      } catch (error) {
-        // server still unreachable, do nothing
+  const checkServer = async () => {
+    try {
+      setChecking(true);
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/public/health`
+      );
+
+      if (res.ok) {
+        window.location.href = "/";
       }
-    };
+    } catch (error) {
+      // server still unreachable
+    } finally {
+      setChecking(false);
+    }
+  };
 
+  useEffect(() => {
+    checkServer();
     const interval = setInterval(checkServer, 3000);
 
     return () => clearInterval(interval);
@@ -33,10 +40,11 @@ export default function ServerDown() {
         </p>
 
         <button
-          onClick={() => (window.location.href = "/")}
-          className="rounded-xl bg-red-500 px-5 py-2.5 font-medium text-white shadow-md transition hover:bg-red-600"
+          onClick={checkServer}
+          disabled={checking}
+          className="rounded-xl bg-red-500 px-5 py-2.5 font-medium text-white shadow-md transition hover:bg-red-600 disabled:opacity-50"
         >
-          Retry
+          {checking ? "Checking..." : "Retry"}
         </button>
       </div>
     </div>
