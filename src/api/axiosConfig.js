@@ -14,16 +14,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ ADD THIS (server down detection)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // 🚨 if no response → server is down / network error
-    if (!error.response) {
-      console.error("SERVER DOWN:", error);
-      window.location.href = "/server-down";
-    }
-
+    console.error("API ERROR:", error);
     return Promise.reject(error);
   }
 );
