@@ -8,9 +8,4 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
   },
-  preview: {
-    host: "0.0.0.0",
-    port: Number(process.env.PORT) || 4173,
-    allowedHosts: ["my-healthcare.up.railway.app"],
-  },
 });
