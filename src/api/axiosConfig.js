@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -28,7 +29,9 @@ api.interceptors.response.use(
     // 🚨 SERVER DOWN / NETWORK ERROR
     if (!error.response) {
       console.error("SERVER DOWN OR NETWORK ISSUE");
-      alert("Server is down or unreachable. Please try again later.");
+
+      toast.error("Server unreachable. Please try again.");
+
       return Promise.reject(error);
     }
 
@@ -38,8 +41,16 @@ api.interceptors.response.use(
 
       localStorage.removeItem("token");
 
-      // redirect to login
+      toast.error("Session expired. Please login again.");
+
       window.location.href = "/";
+    }
+
+    // ❌ OTHER ERRORS (400, 403, 500 etc.)
+    if (error.response?.data?.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error("Something went wrong. Please try again.");
     }
 
     return Promise.reject(error);
