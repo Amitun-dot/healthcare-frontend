@@ -19,6 +19,7 @@ export default function RegisterPage() {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,6 +61,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setMessage("");
     setError("");
+    setLoading(true);
 
     try {
       const payload = {
@@ -70,13 +72,18 @@ export default function RegisterPage() {
       console.log("REGISTER PAYLOAD:", payload);
 
       const res = await authApi.register(payload);
-      setMessage(res?.data?.message || "Registration successful");
-      navigate("/");
+setMessage(res?.data?.message || "Registration successful");
+
+setTimeout(() => {
+  navigate("/");
+}, 800);
     } catch (err) {
       console.error("REGISTER STATUS:", err?.response?.status);
       console.error("REGISTER DATA:", err?.response?.data);
       console.error("FULL REGISTER ERROR:", err);
       setError(err?.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -270,9 +277,10 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              className="mt-5 w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:from-emerald-600 hover:to-cyan-600"
+              disabled={loading}
+              className="mt-5 w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:from-emerald-600 hover:to-cyan-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Register
+              {loading ? "Creating account..." : "Register"}
             </button>
 
             <p className="mt-5 text-center text-sm text-slate-600">

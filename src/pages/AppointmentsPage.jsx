@@ -10,6 +10,7 @@ export default function AppointmentsPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
 
   useEffect(() => {
     fetchAppointments();
@@ -56,8 +57,11 @@ export default function AppointmentsPage() {
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
+      if (actionLoading === appointmentId) return;
+
       setError("");
       setMessage("");
+      setActionLoading(appointmentId);
 
       await patientApi.cancelAppointment(appointmentId);
 
@@ -73,13 +77,18 @@ export default function AppointmentsPage() {
     } catch (err) {
       console.error("Cancel appointment error:", err);
       setError(err?.response?.data?.message || "Failed to cancel appointment");
+    } finally {
+      setActionLoading(null);
     }
   };
 
   const handleDoctorStatusUpdate = async (appointmentId, status) => {
     try {
+      if (actionLoading === appointmentId) return;
+
       setError("");
       setMessage("");
+      setActionLoading(appointmentId);
 
       await doctorApi.updateAppointmentStatus(appointmentId, { status });
 
@@ -95,6 +104,8 @@ export default function AppointmentsPage() {
       setError(
         err?.response?.data?.message || "Failed to update appointment status"
       );
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -289,9 +300,10 @@ export default function AppointmentsPage() {
                       {role === "PATIENT" && appt.status !== "CANCELLED" && (
                         <button
                           onClick={() => handleCancelAppointment(appt.id)}
-                          className="rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:-translate-y-0.5 hover:opacity-95"
+                          disabled={actionLoading === appt.id}
+                          className="rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          Cancel Appointment
+                          {actionLoading === appt.id ? "Processing..." : "Cancel Appointment"}
                         </button>
                       )}
 
@@ -302,9 +314,10 @@ export default function AppointmentsPage() {
                               onClick={() =>
                                 handleDoctorStatusUpdate(appt.id, "COMPLETED")
                               }
-                              className="rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:opacity-95"
+                              disabled={actionLoading === appt.id}
+                              className="rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                              Mark Completed
+                              {actionLoading === appt.id ? "Updating..." : "Mark Completed"}
                             </button>
                           )}
 
@@ -312,9 +325,10 @@ export default function AppointmentsPage() {
                             onClick={() =>
                               handleDoctorStatusUpdate(appt.id, "CANCELLED")
                             }
-                            className="rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:-translate-y-0.5 hover:opacity-95"
+                            disabled={actionLoading === appt.id}
+                            className="rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
                           >
-                            Cancel
+                            {actionLoading === appt.id ? "Updating..." : "Cancel"}
                           </button>
                         </>
                       )}

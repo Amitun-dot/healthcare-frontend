@@ -5,20 +5,23 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
+const isAuthRoute = (url = "") =>
+  url.includes("/auth/login") || url.includes("/auth/register");
+
 // ✅ REQUEST INTERCEPTOR
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
 
-  const isAuthRoute =
-    config.url?.includes("/auth/login") ||
-    config.url?.includes("/auth/register");
+    if (token && !isAuthRoute(config.url)) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  if (token && !isAuthRoute) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // ✅ RESPONSE INTERCEPTOR
 api.interceptors.response.use(
@@ -29,29 +32,29 @@ api.interceptors.response.use(
     // 🚨 SERVER DOWN / NETWORK ERROR
     if (!error.response) {
       console.error("SERVER DOWN OR NETWORK ISSUE");
-
       toast.error("Server unreachable. Please try again.");
+      return Promise.reject(error);
+    }
+
+    const status = error.response.status;
+    const message = error.response?.data?.message;
+
+    // 🔐 TOKEN EXPIRED / UNAUTHORIZED
+    if (status === 401) {
+      console.warn("Unauthorized - Token expired or invalid");
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user");
+
+      toast.error("Session expired. Please login again.");
+      window.location.href = "/";
 
       return Promise.reject(error);
     }
 
-    // 🔐 TOKEN EXPIRED / UNAUTHORIZED
-    if (error.response.status === 401) {
-      console.warn("Unauthorized - Token expired or invalid");
-
-      localStorage.removeItem("token");
-
-      toast.error("Session expired. Please login again.");
-
-      window.location.href = "/";
-    }
-
-    // ❌ OTHER ERRORS (400, 403, 500 etc.)
-    if (error.response?.data?.message) {
-      toast.error(error.response.data.message);
-    } else {
-      toast.error("Something went wrong. Please try again.");
-    }
+    // ❌ OTHER ERRORS (400, 403, 404, 500 etc.)
+    toast.error(message || "Something went wrong. Please try again.");
 
     return Promise.reject(error);
   }

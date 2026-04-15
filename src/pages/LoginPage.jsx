@@ -15,26 +15,32 @@ export default function LoginPage() {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ ADDED
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
+    setLoading(true); // ✅ START LOADING
 
     try {
-      const res = await authApi.login(form);
+            const res = await authApi.login(form);
       login(res.data);
       setMessage("Login successful");
 
       const userRole = res.data.role;
 
-      if (userRole === "ADMIN") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      setTimeout(() => {
+        if (userRole === "ADMIN") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
+      }, 800);
     } catch (err) {
       setError(err?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false); // ✅ STOP LOADING
     }
   };
 
@@ -84,7 +90,6 @@ export default function LoginPage() {
         {/* RIGHT SIDE */}
         <div className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
           <div className="w-full max-w-md">
-            {/* MOBILE TOP BADGE */}
             <div className="mb-6 flex justify-center lg:hidden">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs text-white backdrop-blur-md sm:text-sm">
                 <span className="h-2 w-2 rounded-full bg-emerald-400" />
@@ -96,7 +101,6 @@ export default function LoginPage() {
               onSubmit={handleSubmit}
               className="w-full rounded-[28px] border border-white/10 bg-white/95 p-5 shadow-2xl shadow-blue-950/30 backdrop-blur-xl sm:rounded-[32px] sm:p-8 lg:p-10"
             >
-              {/* LOGO + TITLE */}
               <div className="mb-6 text-center sm:mb-8">
                 <div className="mx-auto mb-4 flex items-center justify-center sm:mb-5">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-cyan-500 to-indigo-600 text-white shadow-xl shadow-blue-500/30 sm:h-16 sm:w-16">
@@ -113,7 +117,6 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* Alerts */}
               {message && (
                 <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
                   {message}
@@ -126,7 +129,6 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {/* Inputs */}
               <div className="space-y-4 sm:space-y-5">
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-slate-700">
@@ -160,13 +162,13 @@ export default function LoginPage() {
 
                 <button
                   type="submit"
-                  className="w-full rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 py-3.5 font-semibold text-white shadow-lg shadow-blue-500/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:from-blue-700 hover:to-indigo-700"
+                  disabled={loading} // ✅ DISABLE
+                  className="w-full rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 py-3.5 font-semibold text-white shadow-lg shadow-blue-500/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Login
+                  {loading ? "Connecting..." : "Login"} {/* ✅ TEXT CHANGE */}
                 </button>
               </div>
 
-              {/* Footer */}
               <p className="mt-6 text-center text-sm text-slate-600">
                 Don&apos;t have an account?{" "}
                 <Link

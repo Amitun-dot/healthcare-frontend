@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
   const [appointmentForm, setAppointmentForm] = useState({
     appointmentDate: "",
@@ -128,11 +129,16 @@ export default function DoctorsPage() {
 
   const handleBook = async (doctorId) => {
     try {
+      if (bookingLoading) return;
+
+      setBookingLoading(true);
+
       const doctor = doctors.find((doc) => doc.id === doctorId);
       const validationError = validateBooking(doctor);
 
       if (validationError) {
         toast.error(validationError);
+        setBookingLoading(false);
         return;
       }
 
@@ -167,6 +173,8 @@ export default function DoctorsPage() {
       } else {
         toast.error(data?.message || "Booking failed");
       }
+    } finally {
+      setBookingLoading(false);
     }
   };
 
@@ -346,9 +354,10 @@ export default function DoctorsPage() {
 
                         <button
                           onClick={() => handleBook(doc.id)}
-                          className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:opacity-95"
+                          disabled={bookingLoading}
+                          className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          Confirm Booking
+                          {bookingLoading ? "Booking..." : "Confirm Booking"}
                         </button>
                       </div>
                     </div>

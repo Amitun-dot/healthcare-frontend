@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/LoginPage";
@@ -9,7 +10,6 @@ import AppointmentsPage from "./pages/AppointmentsPage";
 import PrescriptionPage from "./pages/PrescriptionPage";
 import MyPrescriptionsPage from "./pages/MyPrescriptionsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ServerDown from "./pages/ServerDown";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Admin pages
@@ -17,40 +17,42 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminDoctorsPage from "./pages/Admin/AdminDoctorsPage";
 import AdminPatientsPage from "./pages/Admin/AdminPatientsPage";
 import AdminAppointmentsPage from "./pages/Admin/AdminAppointmentsPage";
-import AdminUsersPage from "./pages/Admin/AdminUsersPage"; // ✅ ADDED
+import AdminUsersPage from "./pages/Admin/AdminUsersPage";
+
+const toasterOptions = {
+  duration: 3000,
+  style: {
+    background: "#ffffff",
+    color: "#111827",
+    border: "1px solid #e5e7eb",
+    borderRadius: "14px",
+    padding: "12px 16px",
+    fontSize: "14px",
+    fontWeight: "500",
+    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.08)",
+  },
+  success: {
+    iconTheme: {
+      primary: "#22c55e",
+      secondary: "#ffffff",
+    },
+  },
+  error: {
+    iconTheme: {
+      primary: "#ef4444",
+      secondary: "#ffffff",
+    },
+  },
+};
 
 function App() {
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/public/health`).catch(() => {});
+  }, []);
+
   return (
     <BrowserRouter>
-      <Toaster
-        position="top-right"
-        gutter={10}
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "#ffffff",
-            color: "#111827",
-            border: "1px solid #e5e7eb",
-            borderRadius: "14px",
-            padding: "12px 16px",
-            fontSize: "14px",
-            fontWeight: "500",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-          },
-          success: {
-            iconTheme: {
-              primary: "#22c55e",
-              secondary: "#ffffff",
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: "#ef4444",
-              secondary: "#ffffff",
-            },
-          },
-        }}
-      />
+      <Toaster position="top-right" gutter={10} toastOptions={toasterOptions} />
 
       <Routes>
         {/* Public Routes */}
@@ -154,7 +156,6 @@ function App() {
           }
         />
 
-        {/* ✅ NEW USERS ROUTE */}
         <Route
           path="/admin/users"
           element={
