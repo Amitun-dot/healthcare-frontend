@@ -8,6 +8,7 @@ export default function DoctorsPage() {
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [appointmentForm, setAppointmentForm] = useState({
     appointmentDate: "",
@@ -20,11 +21,14 @@ export default function DoctorsPage() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
+        setLoading(true);
         const res = await patientApi.getAllDoctors();
         setDoctors(res.data || []);
       } catch (err) {
         console.error(err);
         toast.error("Failed to load doctors");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -214,7 +218,14 @@ export default function DoctorsPage() {
           </div>
         </section>
 
-        {doctors.length === 0 ? (
+        {loading ? (
+          <div className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-xl backdrop-blur-xl">
+            <h3 className="text-xl font-semibold text-white">Fetching doctors...</h3>
+            <p className="mt-2 text-sm text-slate-300">
+              Connecting to server, please wait...
+            </p>
+          </div>
+        ) : doctors.length === 0 ? (
           <div className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-xl backdrop-blur-xl">
             <h3 className="text-xl font-semibold text-white">No doctors found</h3>
             <p className="mt-2 text-sm text-slate-300">
