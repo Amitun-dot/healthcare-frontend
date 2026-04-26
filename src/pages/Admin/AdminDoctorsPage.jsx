@@ -159,9 +159,9 @@ export default function AdminDoctorsPage() {
           </div>
         )}
 
-        <div className="grid gap-6 xl:grid-cols-3">
-          <div className="xl:col-span-1">
-            <div className="rounded-3xl border border-white/10 bg-white p-6 shadow-xl">
+        <div className="grid gap-6 px-3 sm:px-0 lg:grid-cols-3">
+          <div className="mx-auto max-w-md lg:col-span-1 lg:max-w-full">
+            <div className="rounded-3xl border border-white/10 bg-white p-5 shadow-xl sm:p-6">
               <div className="mb-6 flex items-center gap-3">
                 <div className="rounded-2xl bg-blue-50 p-3 text-blue-600">
                   <PlusCircle size={20} />
@@ -280,8 +280,8 @@ export default function AdminDoctorsPage() {
             </div>
           </div>
 
-          <div className="xl:col-span-2">
-            <div className="rounded-3xl border border-white/10 bg-white p-6 shadow-xl">
+          <div className="lg:col-span-2">
+            <div className="rounded-3xl border border-white/10 bg-white p-5 shadow-xl sm:p-6">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900">
@@ -319,8 +319,8 @@ export default function AdminDoctorsPage() {
                 </div>
               ) : (
                 <div className="overflow-hidden rounded-2xl border border-slate-200">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full">
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-full min-w-[800px]">
                       <thead className="bg-slate-50">
                         <tr className="text-left text-sm text-slate-600">
                           <th className="px-5 py-4 font-semibold">Name</th>
@@ -342,23 +342,23 @@ export default function AdminDoctorsPage() {
                             key={doctor.id}
                             className="border-t border-slate-100 text-sm transition hover:bg-slate-50"
                           >
-                            <td className="px-5 py-4 font-semibold text-slate-800">
+                            <td className="whitespace-nowrap px-5 py-4 font-semibold text-slate-800">
                               {doctor.name}
                             </td>
                             <td className="px-5 py-4 text-slate-600">
-                              <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                              <span className="inline-flex whitespace-nowrap rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                                 {doctor.specialization}
                               </span>
                             </td>
-                            <td className="px-5 py-4 text-slate-600">
+                            <td className="whitespace-nowrap px-5 py-4 text-slate-600">
                               {doctor.experienceYears
                                 ? `${doctor.experienceYears} Years`
                                 : "-"}
                             </td>
-                            <td className="px-5 py-4 text-slate-600">
+                            <td className="whitespace-nowrap px-5 py-4 text-slate-600">
                               {doctor.phone}
                             </td>
-                            <td className="px-5 py-4 text-slate-600">
+                            <td className="whitespace-nowrap px-5 py-4 text-slate-600">
                               <label className="inline-flex cursor-pointer items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
                                 {uploadingDoctorId === doctor.id
                                   ? "Uploading..."
