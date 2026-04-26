@@ -14,6 +14,7 @@ export default function AdminDoctorsPage() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingDoctorId, setUploadingDoctorId] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -88,6 +89,7 @@ export default function AdminDoctorsPage() {
     if (!file) return;
 
     try {
+      setUploadingDoctorId(doctorId);
       setMessage("");
       setError("");
 
@@ -104,6 +106,8 @@ export default function AdminDoctorsPage() {
       fetchDoctors();
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to upload signature");
+    } finally {
+      setUploadingDoctorId(null);
     }
   };
 
@@ -356,7 +360,9 @@ export default function AdminDoctorsPage() {
                             </td>
                             <td className="px-5 py-4 text-slate-600">
                               <label className="inline-flex cursor-pointer items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
-                                Upload
+                                {uploadingDoctorId === doctor.id
+                                  ? "Uploading..."
+                                  : "Upload"}
                                 <input
                                   type="file"
                                   accept="image/*"
