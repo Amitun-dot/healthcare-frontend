@@ -159,9 +159,9 @@ export default function AdminDoctorsPage() {
           </div>
         )}
 
-        <div className="grid gap-6 px-3 sm:px-0 lg:grid-cols-3">
-          <div className="mx-auto max-w-md lg:col-span-1 lg:max-w-full">
-            <div className="rounded-3xl border border-white/10 bg-white p-5 shadow-xl sm:p-6">
+        <div className="grid gap-6 xl:grid-cols-3">
+          <div className="xl:col-span-1">
+            <div className="rounded-3xl border border-white/10 bg-white p-6 shadow-xl">
               <div className="mb-6 flex items-center gap-3">
                 <div className="rounded-2xl bg-blue-50 p-3 text-blue-600">
                   <PlusCircle size={20} />
@@ -280,8 +280,8 @@ export default function AdminDoctorsPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="rounded-3xl border border-white/10 bg-white p-5 shadow-xl sm:p-6">
+          <div className="xl:col-span-2 min-w-0">
+            <div className="rounded-3xl border border-white/10 bg-white p-6 shadow-xl">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900">
@@ -320,7 +320,7 @@ export default function AdminDoctorsPage() {
               ) : (
                 <div className="overflow-hidden rounded-2xl border border-slate-200">
                   <div className="w-full overflow-x-auto">
-                    <table className="w-full min-w-[800px]">
+                    <table className="min-w-[800px] w-full">
                       <thead className="bg-slate-50">
                         <tr className="text-left text-sm text-slate-600">
                           <th className="px-5 py-4 font-semibold">Name</th>
