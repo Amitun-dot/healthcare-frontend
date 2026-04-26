@@ -84,6 +84,29 @@ export default function AdminDoctorsPage() {
     }
   };
 
+  const handleSignatureUpload = async (doctorId, file) => {
+    if (!file) return;
+
+    try {
+      setMessage("");
+      setError("");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      await api.post(`/admin/doctors/${doctorId}/signature`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setMessage("Signature uploaded successfully");
+      fetchDoctors();
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to upload signature");
+    }
+  };
+
   const inputClass =
     "w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100";
 
@@ -304,6 +327,9 @@ export default function AdminDoctorsPage() {
                             Experience
                           </th>
                           <th className="px-5 py-4 font-semibold">Phone</th>
+                          <th className="px-5 py-4 font-semibold">
+                            Signature
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -327,6 +353,22 @@ export default function AdminDoctorsPage() {
                             </td>
                             <td className="px-5 py-4 text-slate-600">
                               {doctor.phone}
+                            </td>
+                            <td className="px-5 py-4 text-slate-600">
+                              <label className="inline-flex cursor-pointer items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
+                                Upload
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) =>
+                                    handleSignatureUpload(
+                                      doctor.id,
+                                      e.target.files[0]
+                                    )
+                                  }
+                                />
+                              </label>
                             </td>
                           </tr>
                         ))}
